@@ -1,22 +1,13 @@
 import { useMemo, useEffect, useRef, useState } from 'react'
 import type React from 'react'
-import {
-  ChevronDown,
-  Mic,
-  Moon,
-  Plus,
-  RotateCcw,
-  SlidersHorizontal,
-  Sparkles,
-  Sun,
-} from 'lucide-react'
+import { ChevronDown, Moon, RotateCcw, Sun } from 'lucide-react'
 
 /**
  * 說明
  * 這份版本是為了修正「@ 路徑別名」在沙盒環境無法解析的問題。
  * 因此：
  * 1) 移除所有以 "@/" 開頭的 import（包含 assets 與 shadcn 路徑）。
- * 2) 以輕量的本地 UI 元件（SimpleButton）替代。
+ * 2) 以輕量的本地 UI 元件（SimpleButton / SimpleCard）替代。
  *
  * 目前展示規則（依你最新需求彙整）：
  * - 爬蟲：保留 Run log，且為「動態逐行輸出」展示版本。
@@ -73,6 +64,28 @@ function SimpleButton({
       {children}
     </button>
   )
+}
+
+function SimpleCard({
+  className,
+  ...rest
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cx(
+        'rounded-2xl border border-border bg-card shadow-sm',
+        className
+      )}
+      {...rest}
+    />
+  )
+}
+
+function SimpleCardContent({
+  className,
+  ...rest
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cx('p-6', className)} {...rest} />
 }
 
 // --------------------------------------------
@@ -222,8 +235,7 @@ function Pro360ScrapeShowcase() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-1">
-        <p className="text-sm text-secondary">專案展示</p>
-        <h3 className="text-xl font-medium">網站數據爬取_demo</h3>
+        <h3 className="text-xl font-medium">網站數據爬取</h3>
         <p className="text-sm text-secondary">
           展示重點：JSON 端點優先、HTML 保底、此處以「居家清潔」第 1 頁前三筆做成果示意。
         </p>
@@ -446,7 +458,7 @@ export default function App() {
   )
 
   type SkillId = (typeof skills)[number]['id']
-  const [selectedSkill, setSelectedSkill] = useState<SkillId | null>(null)
+  const [selectedSkill, setSelectedSkill] = useState<SkillId>(() => skills[0].id)
   const [isAboutExpanded, setIsAboutExpanded] = useState(false)
 
   return (
@@ -727,114 +739,99 @@ export default function App() {
           </section>
 
           {/* Skills Selection Section */}
-          <section id="portfolio" className="scroll-mt-24">
-            <div className="rounded-3xl border border-white/30 bg-white/70 p-6 shadow-xl shadow-black/5 backdrop-blur-xl md:p-16 dark:border-white/10 dark:bg-white/10 dark:shadow-black/25">
-              <div className="mx-auto max-w-4xl space-y-8">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-secondary">
-                    <Sparkles className="h-4 w-4 text-accent" />
-                    <span className="text-sm">嗨，歡迎來到我的作品集</span>
-                  </div>
-                  <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
-                    你想從哪裡著手？
-                  </h2>
-                </div>
-
-                {/* Chat-like input (mock UI) */}
-                <div className="rounded-[28px] border border-border bg-surface/70 px-5 py-4 shadow-sm backdrop-blur md:px-6 md:py-5">
-                  <div className="text-sm text-muted-foreground">
-                    {selectedSkill
-                      ? `想看「${skills.find((s) => s.id === selectedSkill)?.label ?? selectedSkill}」的作品嗎？`
-                      : '問問 Gemini'}
-                  </div>
-
-                  <div className="mt-4 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-secondary transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                        aria-label="新增"
-                      >
-                        <Plus className="h-4 w-4" />
-                      </button>
-
-                      <button
-                        type="button"
-                        className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm text-secondary transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                        aria-label="工具"
-                      >
-                        <SlidersHorizontal className="h-4 w-4" />
-                        工具
-                      </button>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm text-secondary transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                        aria-label="快捷"
-                      >
-                        快捷
-                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                      </button>
-
-                      <button
-                        type="button"
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-secondary transition-colors hover:bg-foreground/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-                        aria-label="語音輸入"
-                      >
-                        <Mic className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom navigation (skills) */}
-                <div className="flex flex-wrap items-center gap-2">
-                  {skills.map((s) => {
-                    const active = selectedSkill === s.id
-                    return (
-                      <button
-                        key={s.id}
-                        type="button"
-                        onClick={() => setSelectedSkill(s.id)}
-                        aria-pressed={active}
-                        className={cx(
-                          'h-10 rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-                          active
-                            ? 'border-foreground/15 bg-foreground/10 text-foreground'
-                            : 'border-border bg-surface/50 text-secondary hover:border-foreground/20 hover:bg-foreground/5 hover:text-foreground'
-                        )}
-                      >
-                        {s.label}
-                      </button>
-                    )
-                  })}
-                </div>
-
-                {/* Content */}
-                {selectedSkill === '爬蟲' && <Pro360ScrapeShowcase />}
-                {selectedSkill === 'power bi' && <PowerBIDemoShowcase />}
-                {selectedSkill === 'vibecoding' && (
-                  <div className="rounded-xl border border-border bg-muted/10 p-4">
-                    <p className="text-sm font-medium">Vibe Coding（整理中）</p>
-                    <p className="mt-2 text-sm text-secondary">
-                      會補上：從需求拆解 → 原型 → 迭代驗證的過程與關鍵決策。
-                    </p>
-                  </div>
-                )}
-              </div>
+          <section id="portfolio" className="scroll-mt-24 space-y-6">
+            <div className="space-y-2 text-center">
+              <h2 className="text-2xl md:text-3xl font-semibold">作品集</h2>
+              {/* <p className="text-sm text-muted-foreground">
+                選一個主題，看看我怎麼把結果「講清楚」。
+              </p> */}
             </div>
+
+            <SimpleCard>
+              <SimpleCardContent className="p-6">
+                <div className="space-y-4">
+                  {/* Desktop: segmented buttons */}
+                  <div className="hidden md:flex items-center gap-2">
+                    {skills.map((s) => {
+                      const active = selectedSkill === s.id
+                      return (
+                        <button
+                          key={s.id}
+                          type="button"
+                          onClick={() => setSelectedSkill(s.id)}
+                          aria-pressed={active}
+                          className={cx(
+                            'h-10 rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                            active
+                              ? 'border-accent bg-accent text-accent-foreground'
+                              : 'border-border bg-surface text-secondary hover:border-foreground/20 hover:shadow-sm hover:text-foreground'
+                          )}
+                        >
+                          {s.label}
+                        </button>
+                      )
+                    })}
+                  </div>
+
+                  {/* Mobile: select */}
+                  <div className="relative md:hidden">
+                    <select
+                      value={selectedSkill}
+                      onChange={(e) => setSelectedSkill(e.target.value as SkillId)}
+                      className="flex h-12 w-full appearance-none rounded-lg border border-input bg-surface px-4 pr-10 text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 focus-visible:ring-offset-2"
+                    >
+                      {skills.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  </div>
+
+                  <p className="text-sm text-secondary">
+                    已選擇：{' '}
+                    <span className="text-foreground font-medium">
+                      {skills.find((s) => s.id === selectedSkill)?.label ??
+                        selectedSkill}
+                    </span>
+                  </p>
+
+                  {/* 選擇「爬蟲」時嵌入展示頁 */}
+                  {selectedSkill === '爬蟲' && (
+                    <div className="pt-2">
+                      <Pro360ScrapeShowcase />
+                    </div>
+                  )}
+
+                  {/* 選擇「power bi」時嵌入展示頁 */}
+                  {selectedSkill === 'power bi' && (
+                    <div className="pt-2">
+                      <PowerBIDemoShowcase />
+                    </div>
+                  )}
+
+                  {/* 其他技能的留白提示（可日後擴充） */}
+                  {selectedSkill !== '爬蟲' && selectedSkill !== 'power bi' && (
+                    <div className="rounded-xl border border-border bg-muted/10 p-4">
+                      <p className="text-sm font-medium">Vibe Coding（整理中）</p>
+                      <p className="mt-2 text-sm text-secondary">
+                        會補上：從需求拆解 → 原型 → 迭代驗證的過程與關鍵決策。
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </SimpleCardContent>
+            </SimpleCard>
 
             {/*
               Manual test checklist
-              1) 初始進入為「對話輸入框」樣式，未選技能不顯示內容。
-              2) 點擊下方技能按鈕可切換內容。
-              3) 選擇「爬蟲」時：
+              1) Skills 下拉可正常展開/選取，右側箭頭圖示正確置中。
+              2) 選擇「爬蟲」時：
                  - Run log 為動態逐行輸出。
                  - Run log 完成後才出現「爬取結果」。
                  - 不再顯示「輸出檔案」。
-              4) 選擇「power bi」時：
+              3) 選擇「power bi」時：
                  - 不顯示 Run log。
                  - 成果摘要顯示 GIF（若 public/01.gif 存在）。
                  - 右側有三張說明卡片。

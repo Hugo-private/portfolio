@@ -24,7 +24,12 @@ npm install
 npm run dev
 ```
 
-專案將在 `http://localhost:5173` 啟動
+專案預設會在 `http://localhost:5173` 啟動。
+
+如果你是在 GitHub Codespaces / Remote Container 內開發：
+
+- 請到 VS Code 的 `Ports` 面板打開轉發的 `5173` 連結（或會自動以內嵌 Preview 開啟）。
+- 不要用本機的 `localhost:5173`（那是指你電腦本機，不是容器內的 Vite）。
 
 ### 建置生產版本
 
@@ -78,4 +83,3 @@ Shadcn UI 組件位於 `src/components/ui/` 目錄中。你可以：
 - 編輯 `src/App.tsx` 來建立你的作品集內容
 - 修改 `tailwind.config.js` 來自訂主題
 - 在 `src/index.css` 中調整 CSS 變數來改變顏色主題
-

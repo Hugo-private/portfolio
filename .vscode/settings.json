@@ -1,0 +1,9 @@
+{
+    "livePreview.defaultPreviewPath": "/index.html",
+    "remote.portsAttributes": {
+        "5173": {
+            "label": "Vite Dev Server",
+            "onAutoForward": "openPreview"
+        }
+    }
+}

@@ -59,12 +59,12 @@ const Timeline: React.FC<TimelineProps> = ({ nodes, className }) => {
                 className={cn(
                   "rounded-full border-2 flex items-center justify-center relative z-10",
                   node.isActive
-                    ? "w-12 h-12 bg-foreground border-foreground shadow-lg"
-                    : "w-8 h-8 bg-background border-border"
+                    ? "w-12 h-12 bg-accent border-accent shadow-lg"
+                    : "w-8 h-8 bg-surface border-border"
                 )}
               >
                 {node.isActive && (
-                  <div className="w-4 h-4 rounded-full bg-background" />
+                  <div className="w-4 h-4 rounded-full bg-surface" />
                 )}
               </div>
               <div

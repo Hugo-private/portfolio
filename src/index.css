@@ -2,50 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* Typography spec alias: Small = `text-sm text-secondary` */
+  .text-secondary {
+    @apply text-muted-foreground;
+  }
+}
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Background / Surface */
+    --background: 216 45.5% 97.8%; /* #F7F9FC */
+    --surface: 0 0% 100%; /* #FFFFFF */
+
+    /* Text */
+    --foreground: 222.2 47.4% 11.2%; /* #0F172A */
+
+    /* Cards / Popovers */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 222.2 47.4% 11.2%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    /* Accent / Brand */
+    --accent: 169.2 70.3% 44.9%; /* #22C3A6 */
+    --accent-hover: 169.9 73.3% 39.6%; /* #1BAF96 */
+    --accent-foreground: 0 0% 100%;
+
+    /* Shadcn compat */
+    --primary: 169.2 70.3% 44.9%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 213.3 36% 95.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --muted: 213.3 36% 95.1%;
+    --muted-foreground: 215.3 19.3% 34.5%; /* #475569 */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 31.6% 92.5%; /* #E6EAF2 */
+    --input: 220 31.6% 92.5%;
+    --ring: 169.2 70.3% 44.9%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Background / Surface */
+    --background: 220 48.8% 8.4%; /* #0B1220 */
+    --surface: 221.4 46% 12.4%; /* #111A2E */
+
+    /* Text */
+    --foreground: 220 13% 91%; /* #E5E7EB */
+
+    /* Cards / Popovers */
+    --card: 221.4 46% 12.4%; /* #111A2E */
+    --card-foreground: 220 13% 91%;
+    --popover: 221.4 46% 12.4%;
+    --popover-foreground: 220 13% 91%;
+
+    /* Accent / Brand */
+    --accent: 169.2 70.3% 44.9%;
+    --accent-hover: 169.9 73.3% 39.6%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Shadcn compat */
+    --primary: 169.2 70.3% 44.9%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 52.4% 12.4%;
+    --secondary-foreground: 220 13% 91%;
+    --muted: 220 52.4% 12.4%;
+    --muted-foreground: 215 20.2% 65.1%; /* #94A3B8 */
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 221.1 38.8% 19.2%; /* #1E2A44 */
+    --input: 221.1 38.8% 19.2%;
+    --ring: 169.2 70.3% 44.9%;
   }
 }
 
@@ -57,7 +86,7 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background font-sans text-foreground antialiased;
   }
 }
 
