@@ -53,8 +53,14 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
 }
 
+::selection {
+  background: hsl(var(--foreground) / 0.12);
+}
