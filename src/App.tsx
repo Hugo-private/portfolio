@@ -392,7 +392,8 @@ function PowerBIDemoShowcase() {
 // App content versions
 // --------------------------------------------
 
-type AppVersion = 'resume' | 'report-2025'
+type AppVersion = 'resume' | 'report'
+type AppVersionState = AppVersion | null
 
 type Experience = {
   title: string
@@ -413,19 +414,16 @@ type ReportOtherProject = {
 }
 
 const VERSION_ALIASES: Record<string, AppVersion> = {
-  resume: 'resume',
-  cv: 'resume',
-  report: 'report-2025',
-  'report-2025': 'report-2025',
-  '2025': 'report-2025',
+  hugooo: 'resume',
+  report: 'report',
 }
 
-function getInitialVersion(): AppVersion {
-  if (typeof window === 'undefined') return 'resume'
+function getInitialVersion(): AppVersionState {
+  if (typeof window === 'undefined') return null
   const raw = new URLSearchParams(window.location.search)
     .get('version')
     ?.toLowerCase()
-  return raw && VERSION_ALIASES[raw] ? VERSION_ALIASES[raw] : 'resume'
+  return raw && VERSION_ALIASES[raw] ? VERSION_ALIASES[raw] : null
 }
 
 const RESUME_SKILLS = [
@@ -827,12 +825,12 @@ const LOGIN_FAILURE_LINES = [
 
 export default function App() {
   const { theme, toggle } = useThemeToggle()
-  const [version] = useState<AppVersion>(() => getInitialVersion())
-  const isReport = version === 'report-2025'
-  const content = version === 'report-2025' ? REPORT_CONTENT : RESUME_CONTENT
+  const [version] = useState<AppVersionState>(() => getInitialVersion())
+  const isReport = version === 'report'
+  const content = version === 'report' ? REPORT_CONTENT : RESUME_CONTENT
   const skills = RESUME_SKILLS
   const experiences: readonly Experience[] =
-    version === 'report-2025' ? REPORT_EXPERIENCES : RESUME_EXPERIENCES
+    version === 'report' ? REPORT_EXPERIENCES : RESUME_EXPERIENCES
   const portfolioContent = RESUME_CONTENT.portfolio
 
   // 大頭照（建議放在 public/，用「/檔名」引用）
@@ -912,6 +910,10 @@ export default function App() {
 
     setIsAuthenticated(false)
     setLoginAttempts((prev) => prev + 1)
+  }
+
+  if (!version) {
+    return null
   }
 
   return (
@@ -1032,7 +1034,7 @@ export default function App() {
                                 account: event.target.value,
                               }))
                             }
-                            placeholder="請輸入員邊帳號"
+                            placeholder="請輸入員編帳號"
                           />
                         </label>
                         <label className="space-y-1 text-sm font-medium text-secondary">
@@ -1251,7 +1253,7 @@ export default function App() {
                     type="button"
                     variant="outline"
                     size="icon"
-                    className="absolute -left-20 top-1/2 -translate-y-1/2 rounded-full shadow-none backdrop-blur-sm transition"
+                    className="absolute -left-20 top-1/2 hidden -translate-y-1/2 rounded-full shadow-none backdrop-blur-sm transition sm:inline-flex"
                     onClick={() =>
                       setExperienceIndex((prev) => Math.max(0, prev - 1))
                     }
@@ -1266,7 +1268,7 @@ export default function App() {
                     type="button"
                     variant="outline"
                     size="icon"
-                    className="absolute -right-20 top-1/2 -translate-y-1/2 rounded-full shadow-none backdrop-blur-sm transition"
+                    className="absolute -right-20 top-1/2 hidden -translate-y-1/2 rounded-full shadow-none backdrop-blur-sm transition sm:inline-flex"
                     onClick={() =>
                       setExperienceIndex((prev) =>
                         Math.min(experiences.length - 1, prev + 1)
@@ -1279,34 +1281,39 @@ export default function App() {
                   </SimpleButton>
                 )}
                 <div className="card py-6">
-                  <div className="flex items-start justify-between gap-4 px-6">
-                    <div className="min-w-0">
-                      <h3 className="text-xl md:text-2xl font-semibold font-sans tracking-tight text-emerald-700 dark:text-emerald-400">
-                        {activeExperience.title}
-                      </h3>
-                      {activeExperience.company && (
-                        <p className="mt-1 truncate text-sm font-semibold text-secondary">
-                          {activeExperience.company}
-                        </p>
+                  <div className="px-6">
+                    <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-start">
+                      <div className="min-w-0">
+                        <h3 className="text-xl md:text-2xl font-semibold font-sans tracking-tight text-emerald-700 dark:text-emerald-400">
+                          {activeExperience.title}
+                        </h3>
+                        {activeExperience.company && (
+                          <p className="mt-1 text-sm font-semibold text-secondary">
+                            {activeExperience.company}
+                          </p>
+                        )}
+                        {activeExperience.period && (
+                          <span className="mt-2 inline-flex badge-soft sm:hidden">
+                            {activeExperience.period}
+                          </span>
+                        )}
+                      </div>
+                      {activeExperience.period && (
+                        <span className="hidden shrink-0 badge-soft sm:inline-flex">
+                          {activeExperience.period}
+                        </span>
                       )}
-                      {experienceSummary.length ? (
-                        <p className="mt-3 text-sm text-secondary">
-                          {experienceSummary.map((line, index) => (
-                            <span key={`${line}-${index}`}>
-                              {line}
-                              {index < experienceSummary.length - 1 && (
-                                <br />
-                              )}
-                            </span>
-                          ))}
-                        </p>
-                      ) : null}
                     </div>
-                    {activeExperience.period && (
-                      <span className="shrink-0 badge-soft">
-                        {activeExperience.period}
-                      </span>
-                    )}
+                    {experienceSummary.length ? (
+                      <p className="mt-3 text-sm text-secondary">
+                        {experienceSummary.map((line, index) => (
+                          <span key={`${line}-${index}`}>
+                            {line}
+                            {index < experienceSummary.length - 1 && <br />}
+                          </span>
+                        ))}
+                      </p>
+                    ) : null}
                   </div>
                   {activeExperience.highlights && (
                     <div className="mt-5 flex flex-col gap-6 px-6 md:flex-row md:items-start md:justify-between">
@@ -1354,6 +1361,22 @@ export default function App() {
                       }
                       size="default"
                       onClick={() => setExperienceIndex(item.index)}
+                      className="h-9 px-3 text-sm"
+                    >
+                      {item.title}
+                    </SimpleButton>
+                  ))}
+                </div>
+              )}
+              {isReport && (
+                <div className="mx-auto mt-4 flex max-w-4xl flex-wrap justify-center gap-2">
+                  {experiences.map((item, index) => (
+                    <SimpleButton
+                      key={item.title}
+                      type="button"
+                      variant={experienceIndex === index ? 'solid' : 'outline'}
+                      size="default"
+                      onClick={() => setExperienceIndex(index)}
                       className="h-9 px-3 text-sm"
                     >
                       {item.title}
